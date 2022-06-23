@@ -2,7 +2,6 @@
 
 pub type Email {
   Email(
-    bounce_address: String,
     from: Addressee,
     to: List(Addressee),
     cc: List(Addressee),
@@ -18,8 +17,8 @@ pub type Addressee {
 }
 
 pub type Body {
-  TextBody(text: String)
-  RichBody(text: String, html: String)
+  TextBody(content: String)
+  HtmlBody(content: String)
 }
 
 pub type ApiData {
