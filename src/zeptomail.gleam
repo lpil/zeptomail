@@ -7,7 +7,6 @@ import gleam/http
 import gleam/result
 import gleam/dynamic as dyn
 import gleam/option.{Option}
-import gleam/io
 
 /// Create a HTTP request to send an email via the ZeptoMail API
 pub fn email_request(email: Email, api_token: String) -> Request(String) {
@@ -15,8 +14,6 @@ pub fn email_request(email: Email, api_token: String) -> Request(String) {
     email
     |> encode_email
     |> json.to_string
-
-  io.println(body)
 
   request.new()
   |> request.set_method(http.Post)
@@ -30,8 +27,6 @@ pub fn email_request(email: Email, api_token: String) -> Request(String) {
 pub fn decode_email_response(
   response: Response(String),
 ) -> Result(ApiData, ApiError) {
-  io.debug(response.status)
-  io.println(response.body)
   case response.status >= 200 && response.status < 300 {
     True ->
       json.decode(response.body, api_data_decoder())
