@@ -34,7 +34,7 @@ pub fn main() {
     subject: "Hello, Joe!",
   )
 
-  // Prepare an API request
+  // Prepare an API request that sends the email
   let request = zeptomail.email_request(email, key)
 
   // Send the API request using `gleam_hackney`
