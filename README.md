@@ -23,6 +23,7 @@ import zeptomail.{Addressee}
 pub fn main() {
   let key = "your-api-key-here"
 
+  // Create an email to send
   let email = zeptomail.Email(
     from: [Addressee("Mike", "mike@example.com")],
     to: Addressee("Joe", "joe@example.com"),
