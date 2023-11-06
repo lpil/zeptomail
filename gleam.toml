@@ -1,5 +1,5 @@
 name = "zeptomail"
-version = "0.1.1"
+version = "1.0.0"
 
 licences = ["Apache-2.0"]
 description = "A wrapper for ZeptoMail's transactional email API"
