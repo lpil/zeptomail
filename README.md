@@ -17,7 +17,7 @@ gleam add zeptomail
 And then send some email!
 
 ```gleam
-import gleam/hackney
+import gleam/httpc
 import zeptomail.{Addressee}
 
 pub fn main() {
@@ -37,10 +37,10 @@ pub fn main() {
   // Prepare an API request that sends the email
   let request = zeptomail.email_request(email, key)
 
-  // Send the API request using `gleam_hackney`
-  assert Ok(response) = hackney.send(request)
+  // Send the API request using `gleam_httpc`
+  let assert Ok(response) = httpc.send(request)
 
   // Parse the API response to verify success
-  assert Ok(data) = zeptomail.decode_email_response(response)
+  let assert Ok(data) = zeptomail.decode_email_response(response)
 }
 ```

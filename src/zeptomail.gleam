@@ -1,12 +1,12 @@
 // https://www.zoho.com/zeptomail/help/api/email-sending.html
 
-import gleam/json.{Json}
-import gleam/http/request.{Request}
-import gleam/http/response.{Response}
+import gleam/json.{type Json}
+import gleam/http/request.{type Request}
+import gleam/http/response.{type Response}
 import gleam/http
 import gleam/result
 import gleam/dynamic as dyn
-import gleam/option.{Option}
+import gleam/option.{type Option}
 
 /// Create a HTTP request to send an email via the ZeptoMail API
 pub fn email_request(email: Email, api_token: String) -> Request(String) {

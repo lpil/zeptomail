@@ -4,7 +4,7 @@ import zeptomail
 
 pub fn main() {
   let key = ""
-  assert Ok(response) =
+  let assert Ok(response) =
     zeptomail.Email(
       from: zeptomail.Addressee("Louis", ""),
       to: [zeptomail.Addressee("Louis", "")],
