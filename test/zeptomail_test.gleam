@@ -1,5 +1,5 @@
-import gleam/io
 import gleam/hackney
+import gleam/io
 import zeptomail
 
 pub fn main() {

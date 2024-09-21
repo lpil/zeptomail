@@ -1,12 +1,12 @@
 // https://www.zoho.com/zeptomail/help/api/email-sending.html
 
-import gleam/json.{type Json}
+import gleam/dynamic as dyn
+import gleam/http
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
-import gleam/http
-import gleam/result
-import gleam/dynamic as dyn
+import gleam/json.{type Json}
 import gleam/option.{type Option}
+import gleam/result
 
 /// Create a HTTP request to send an email via the ZeptoMail API
 pub fn email_request(email: Email, api_token: String) -> Request(String) {
@@ -60,10 +60,9 @@ fn encode_email(email: Email) -> Json {
     HtmlBody(_) -> "htmlbody"
   }
   let addressee_array = fn(addressees) {
-    json.array(
-      addressees,
-      fn(a) { json.object([#("email_address", encode_addressee(a))]) },
-    )
+    json.array(addressees, fn(a) {
+      json.object([#("email_address", encode_addressee(a))])
+    })
   }
 
   json.object([
