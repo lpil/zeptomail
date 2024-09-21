@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.0 - 2024-09-21
+
+- Dependency version requirements relaxed. 
+
 ## v1.0.0 - 2023-11-06
 
 - Updated for Gleam v0.32.
