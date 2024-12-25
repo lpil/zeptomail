@@ -25,8 +25,8 @@ pub fn main() {
 
   // Create an email to send
   let email = zeptomail.Email(
-    from: [Addressee("Mike", "mike@example.com")],
-    to: Addressee("Joe", "joe@example.com"),
+    from: Addressee("Mike", "mike@example.com"),
+    to: [Addressee("Joe", "joe@example.com")],
     reply_to: [],
     cc: [Addressee("Robert", "robert@example.com")],
     bcc: [],
