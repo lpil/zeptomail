@@ -1,5 +1,4 @@
 import gleam/hackney
-import gleam/io
 import zeptomail
 
 pub fn main() {
@@ -18,5 +17,5 @@ pub fn main() {
     |> hackney.send
   response
   |> zeptomail.decode_email_response
-  |> io.debug
+  |> echo
 }

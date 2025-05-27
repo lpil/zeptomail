@@ -1,11 +1,10 @@
 // https://www.zoho.com/zeptomail/help/api/email-sending.html
-
-import gleam/dynamic as dyn
+import gleam/dynamic/decode
 import gleam/http
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
 import gleam/json.{type Json}
-import gleam/option.{type Option}
+import gleam/option.{type Option, None}
 import gleam/result
 
 /// Create a HTTP request to send an email via the ZeptoMail API
@@ -29,10 +28,12 @@ pub fn decode_email_response(
 ) -> Result(ApiData, ApiError) {
   case response.status >= 200 && response.status < 300 {
     True ->
-      json.decode(response.body, api_data_decoder())
+      response.body
+      |> json.parse(api_data_decoder())
       |> result.map_error(UnexpectedResponse)
     False ->
-      json.decode(response.body, api_error_decoder())
+      response.body
+      |> json.parse(api_error_decoder())
       |> result.map_error(UnexpectedResponse)
       |> result.then(Error)
   }
@@ -97,26 +98,23 @@ pub type ApiData {
   )
 }
 
-fn api_data_decoder() -> dyn.Decoder(ApiData) {
-  dyn.decode4(
-    ApiData,
-    dyn.field("object", of: dyn.string),
-    dyn.field("request_id", of: dyn.string),
-    dyn.field("message", of: dyn.string),
-    dyn.field("data", of: dyn.list(of: api_datum_decoder())),
-  )
+fn api_data_decoder() -> decode.Decoder(ApiData) {
+  use object <- decode.field("object", decode.string)
+  use request_id <- decode.field("request_id", decode.string)
+  use message <- decode.field("message", decode.string)
+  use data <- decode.field("data", decode.list(api_datum_decoder()))
+  decode.success(ApiData(object, request_id, message, data))
 }
 
 pub type ApiDatum {
   ApiDatum(code: String, message: String)
 }
 
-fn api_datum_decoder() -> dyn.Decoder(ApiDatum) {
-  dyn.decode2(
-    ApiDatum,
-    dyn.field("code", of: dyn.string),
-    dyn.field("message", of: dyn.string),
-  )
+fn api_datum_decoder() -> decode.Decoder(ApiDatum) {
+  use code <- decode.field("code", decode.string)
+  use message <- decode.field("message", decode.string)
+
+  decode.success(ApiDatum(code, message))
 }
 
 /// An error returned by the ZeptoMail API.
@@ -128,16 +126,15 @@ pub type ApiError {
   UnexpectedResponse(json.DecodeError)
 }
 
-fn api_error_decoder() -> dyn.Decoder(ApiError) {
-  dyn.field(
-    "error",
-    dyn.decode3(
-      ApiError,
-      dyn.field("code", of: dyn.string),
-      dyn.field("message", of: dyn.string),
-      dyn.field("details", of: dyn.list(of: api_error_detail_encoder())),
-    ),
+fn api_error_decoder() -> decode.Decoder(ApiError) {
+  use code <- decode.subfield(["error", "code"], decode.string)
+  use message <- decode.subfield(["error", "message"], decode.string)
+  use details <- decode.subfield(
+    ["error", "details"],
+    decode.list(api_error_detail_decoder()),
   )
+
+  decode.success(ApiError(code, message, details))
 }
 
 pub type ApiErrorDetail {
@@ -149,19 +146,18 @@ pub type ApiErrorDetail {
   )
 }
 
-fn api_error_detail_encoder() -> dyn.Decoder(ApiErrorDetail) {
-  let optional_string = fn(field) {
-    dyn.any([
-      dyn.field(field, of: dyn.optional(dyn.string)),
-      fn(_) { Ok(option.None) },
-    ])
-  }
-
-  dyn.decode4(
-    ApiErrorDetail,
-    dyn.field("code", of: dyn.string),
-    dyn.field("message", of: dyn.string),
-    optional_string("target"),
-    optional_string("target_value"),
+fn api_error_detail_decoder() -> decode.Decoder(ApiErrorDetail) {
+  use code <- decode.field("code", decode.string)
+  use message <- decode.field("message", decode.string)
+  use target <- decode.optional_field(
+    "target",
+    None,
+    decode.optional(decode.string),
   )
+  use target_value <- decode.optional_field(
+    "target_value",
+    None,
+    decode.optional(decode.string),
+  )
+  decode.success(ApiErrorDetail(code, message, target, target_value))
 }
