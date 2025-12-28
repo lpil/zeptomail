@@ -1,12 +1,16 @@
 # Changelog
 
+## v2.1.0 - 2025-12-28
+
+- Dependency version requirements relaxed.
+
 ## v2.0.0 - 2025-05-27
 
 - Updated for latest `gleam_stdlib`.
 
 ## v1.1.0 - 2024-09-21
 
-- Dependency version requirements relaxed. 
+- Dependency version requirements relaxed.
 
 ## v1.0.0 - 2023-11-06
 
